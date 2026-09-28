@@ -69,7 +69,7 @@
     <main class="p-6">
         
         <!-- Cartões de Resumo (KPIs rápidos) -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
             <div class="bg-spwhite p-4 rounded-lg shadow border-l-4 border-spred">
                 <h3 class="text-spgray text-xs font-bold uppercase">Total de Unidades</h3>
                 <p class="text-2xl font-bold text-spblack" id="kpiTotal">0</p>
@@ -81,6 +81,10 @@
             <div class="bg-spwhite p-4 rounded-lg shadow border-l-4 border-spgray">
                 <h3 class="text-spgray text-xs font-bold uppercase">Regional SP</h3>
                 <p class="text-2xl font-bold text-spblack" id="kpiSP">0</p>
+            </div>
+            <div class="bg-spwhite p-4 rounded-lg shadow border-l-4 border-yellow-500">
+                <h3 class="text-spgray text-xs font-bold uppercase">Apenas Mensalistas</h3>
+                <p class="text-2xl font-bold text-yellow-600" id="kpiApenasMensal">0</p>
             </div>
             <div class="bg-spwhite p-4 rounded-lg shadow border-l-4 border-spred">
                 <h3 class="text-spgray text-xs font-bold uppercase">Pendência de Endereço</h3>
@@ -119,36 +123,36 @@
             { id: "UN-RJ-001", nome: "ACM - RIO", reg: "RJ", setor: "Setor Lapa", func: "05:45h às 22h (Seg-Sex) - 08h às 20h (Sáb/Dom)", sup: "Fabiano", end: "R. da Lapa, 86 - Lapa, RJ, 20021-180" },
             { id: "UN-RJ-002", nome: "ASA BOTAFOGO", reg: "RJ", setor: "Setor Zona Sul", func: "07h às 22h (Seg-Sáb) - 08h às 20h (Dom)", sup: "Fabiano", end: "R. São Clemente, 155 - Botafogo, Rio de Janeiro - RJ, 22260-003" },
             { id: "UN-RJ-003", nome: "BARCAS SHOPPING", reg: "RJ", setor: "Setor Niterói", func: "07:30h às 20h (Seg-Sex) - 07:30h às 18h (Sáb)", sup: "Carlos Vinicius", end: "R. Visc. do Uruguai, 231 - Centro, Niterói - RJ, 24030-073" },
-            { id: "UN-RJ-004", nome: "BARRA MALL", reg: "RJ", setor: "Setor Barra", func: "06h às 23:59h (Seg-Dom)", sup: "Alex", end: "Av. das Américas, 7.700 - Barra da Tijuca, Rio de Janeiro - RJ, 22793-081" },
+            { id: "UN-RJ-004", nome: "BARRA MALL", reg: "RJ", setor: "Setor Barra", func: "06h às 24h (Seg-Dom)", sup: "Alex", end: "Av. das Américas, 7.700 - Barra da Tijuca, Rio de Janeiro - RJ, 22793-081" },
             { id: "UN-RJ-005", nome: "BEIRA MAR", reg: "RJ", setor: "Setor Icaraí Niterói", func: "08h às 22h (Seg-Sex) - 08h às 21h (Sáb/Dom)", sup: "Marcelo Maia", end: "R. Pres. Backer, 68 - Icaraí, Niterói - RJ, 24220-045" },
             { id: "UN-RJ-006", nome: "BOKEL", reg: "RJ", setor: "Setor Centro RJ", func: "06h às 23h (Seg-Sex) - 08h às 20h (Sáb/Dom)", sup: "Fabiano", end: "Av. Rio Branco, 245 - Centro, Rio de Janeiro - RJ, 20040-009" },
             { id: "UN-RJ-007", nome: "CENTER IV", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sex) - 07h às 18h (Sáb)", sup: "Marcelo Maia", end: "R. Lopes Trovão, 122 - Icaraí, Niterói - RJ, 24220-071" },
             { id: "UN-RJ-008", nome: "CENTRAL PARK", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sex) - 07h às 18h (Sáb)", sup: "Marcelo Maia", end: "R. Otávio Carneiro, 143 - Icaraí, Niterói - RJ, 24230-190" },
-            { id: "UN-RJ-009", nome: "CENTRAL PRIME", reg: "RJ", setor: "Setor Icaraí Niterói", func: "06h às 23:59h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Otávio Carneiro, 143 - Icaraí, Niterói - RJ, 24230-190" },
+            { id: "UN-RJ-009", nome: "CENTRAL PRIME", reg: "RJ", setor: "Setor Icaraí Niterói", func: "06h às 24h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Otávio Carneiro, 143 - Icaraí, Niterói - RJ, 24230-190" },
             { id: "UN-RJ-010", nome: "CENTRO CLÍNICO ICARAÍ", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 22h (Seg-Sex) - 07h às 20h (Sáb)", sup: "Marcelo Maia", end: "R. Miguel de Frias, 51 - Icaraí, Niterói - RJ, 24220-008" },
             { id: "UN-RJ-011", nome: "CENTRO COMERCIAL AMERICAS", reg: "RJ", setor: "Setor Barra", func: "07h às 22h (Seg-Sáb)", sup: "Alex", end: "Av. das Américas, 3693 - Barra da Tijuca, Rio de Janeiro - RJ, 22631-003" },
             { id: "UN-RJ-012", nome: "CEVI", reg: "RJ", setor: "Setor Centro RJ", func: "06h às 22h (Seg-Sex) - 07h às 17h (Sáb)", sup: "Alessandro", end: "R. Gavião Peixoto, 182 - Icaraí, Niterói - RJ, 24230-101" },
             { id: "UN-RJ-014", nome: "CONCEIÇÃO", reg: "RJ", setor: "Setor Centro Niterói", func: "08h às 20h (Seg-Sex) - 08h às 16h (Sáb)", sup: "Carlos Vinicius", end: "R. da Conceição, 171 - Centro, Niterói - RJ, 24020-086" },
-            { id: "UN-RJ-015", nome: "COPACABANA MEDICAL CENTER", reg: "RJ", setor: "Setor Zona Sul", func: "06h às 23:59h (Seg-Dom)", sup: "Fabiano", end: "Rua Siqueira Campos, 93 - Copacabana, Rio de Janeiro - RJ, 22031-071" },
-            { id: "UN-RJ-016", nome: "CS FATIMA", reg: "RJ", setor: "Setor Nova Iguaçu RJ", func: "06h às 23:59h (Seg-Dom)", sup: "Alex", end: "Av. Gov. Roberto Silveira, 470 - Centro, Nova Iguaçu - RJ, 26210-220" },
+            { id: "UN-RJ-015", nome: "COPACABANA MEDICAL CENTER", reg: "RJ", setor: "Setor Zona Sul", func: "06h às 24h (Seg-Dom)", sup: "Fabiano", end: "Rua Siqueira Campos, 93 - Copacabana, Rio de Janeiro - RJ, 22031-071" },
+            { id: "UN-RJ-016", nome: "CS FATIMA", reg: "RJ", setor: "Setor Nova Iguaçu RJ", func: "06h às 24h (Seg-Dom)", sup: "Alex", end: "Av. Gov. Roberto Silveira, 470 - Centro, Nova Iguaçu - RJ, 26210-220" },
             { id: "UN-RJ-017", nome: "ELETROBRAS", reg: "RJ", setor: "Setor Centro RJ", func: "06h às 22h (Seg-Sex) - 07h às 13h (Sáb)", sup: "Fabiano", end: "RUA DA QUITANDA Nº 196" },
             { id: "UN-RJ-018", nome: "GLOBAL FREGUESIA", reg: "RJ", setor: "Setor Jacarepaguá", func: "07h às 22h (Seg-Sex) - 07h às 18h (Sáb)", sup: "Alex", end: "Estr. dos Três Rios, 1173 - Freguesia (Jacarepaguá), Rio de Janeiro - RJ, 22745-004" },
             { id: "UN-RJ-019", nome: "FUTURA SHOPPING", reg: "RJ", setor: "Setor Pendotiba Niterói", func: "07h às 22h (Seg-Sex) - 07h às 22h (Sáb)", sup: "Carlos Vinicius", end: "R. Visc. do Uruguai, 231 - Centro, Niterói - RJ, 24030-073" },
             { id: "UN-RJ-020", nome: "GLOBAL OFFICES", reg: "RJ", setor: "Setor Centro de Niterói", func: "07h às 20h (Seg-Sex) - 07h às 17h (Sáb)", sup: "Carlos Vinicius", end: "R. Gen. Andrade Neves, 38 - Centro, Niterói - RJ, 24210-000" },
             { id: "UN-RJ-021", nome: "HILÁRIO DE GOUVEIA", reg: "RJ", setor: "Setor Zona Sul", func: "07h às 22h (Seg-Sex) - 08h às 22h (Sáb) - 08h às 20h (Dom)", sup: "Fabiano", end: "R. Primeiro de Março, 149 - Centro, Rio de Janeiro - RJ, 20010-000" },
-            { id: "UN-RJ-022", nome: "HOSPITAL ITAIPU", reg: "RJ", setor: "Setor Pendotiba Niterói", func: "06h às 23:59h (Seg-Dom)", sup: "Marcelo Maia", end: "Estr. Francisco da Cruz Nunes, 5599 - Itaipu, Niterói - RJ, 24310-340" },
-            { id: "UN-RJ-023", nome: "HUMAITÁ", reg: "RJ", setor: "Setor Zona Sul", func: "06h às 23:59h (Seg-Dom)", sup: "Fabiano", end: "Rua Humaitá, 72 - Humaitá, Rio de Janeiro - RJ, 22261-001" },
+            { id: "UN-RJ-022", nome: "HOSPITAL ITAIPU", reg: "RJ", setor: "Setor Pendotiba Niterói", func: "06h às 24h (Seg-Dom)", sup: "Marcelo Maia", end: "Estr. Francisco da Cruz Nunes, 5599 - Itaipu, Niterói - RJ, 24310-340" },
+            { id: "UN-RJ-023", nome: "HUMAITÁ", reg: "RJ", setor: "Setor Zona Sul", func: "06h às 24h (Seg-Dom)", sup: "Fabiano", end: "Rua Humaitá, 72 - Humaitá, Rio de Janeiro - RJ, 22261-001" },
             { id: "UN-RJ-024", nome: "IB SANTA ROSA", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sáb) - 07h às 13h (Dom)", sup: "Marcelo Maia", end: "R. Santa Rosa, 25 - Santa Rosa, Niterói - RJ, 24240-225" },
-            { id: "UN-RJ-025", nome: "IGREJA SÃO JOÃO BATISTA", reg: "RJ", setor: "Setor Botafogo RJ", func: "06h às 23:59h (Seg-Dom)", sup: "Fabiano", end: "R. Voluntários da Pátria, 287 - Botafogo, Rio de Janeiro - RJ, 22270-003" },
+            { id: "UN-RJ-025", nome: "IGREJA SÃO JOÃO BATISTA", reg: "RJ", setor: "Setor Botafogo RJ", func: "06h às 24h (Seg-Dom)", sup: "Fabiano", end: "R. Voluntários da Pátria, 287 - Botafogo, Rio de Janeiro - RJ, 22270-003" },
             { id: "UN-RJ-026", nome: "IPANEMA", reg: "RJ", setor: "Setor Zona Sul", func: "07h às 22h (Seg-Sáb) - 07h às 20h (Dom)", sup: "Fabiano", end: "218 - R. Visc. de Pirajá, 152 - Ipanema, Rio de Janeiro - RJ, 22410-000" },
-            { id: "UN-RJ-027", nome: "ITAUNA SHOPPING", reg: "RJ", setor: "Setor Barra", func: "06h às 23:59h (Seg-Dom)", sup: "Alex", end: "Av. das Américas, 11391 - Barra da Tijuca, Rio de Janeiro - RJ, 22793-082" },
-            { id: "UN-RJ-028", nome: "JOAO PESSOA", reg: "RJ", setor: "Setor Icaraí Niterói", func: "06h às 23:59h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Pres. João Pessoa, 216 - Icaraí, Niterói - RJ, 24220-331" },
+            { id: "UN-RJ-027", nome: "ITAUNA SHOPPING", reg: "RJ", setor: "Setor Barra", func: "06h às 24h (Seg-Dom)", sup: "Alex", end: "Av. das Américas, 11391 - Barra da Tijuca, Rio de Janeiro - RJ, 22793-082" },
+            { id: "UN-RJ-028", nome: "JOAO PESSOA", reg: "RJ", setor: "Setor Icaraí Niterói", func: "06h às 24h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Pres. João Pessoa, 216 - Icaraí, Niterói - RJ, 24220-331" },
             { id: "UN-RJ-029", nome: "LAGOA AVENTURAS", reg: "RJ", setor: "Setor Zona Sul", func: "08h às 17h (Terça-Dom)", sup: "Alex", end: "Av. Epitácio Pessoa, 3 - Lagoa, Rio de Janeiro - RJ, 22471-002" },
             { id: "UN-RJ-030", nome: "MADUREIRA", reg: "RJ", setor: "Setor Subúrbio", func: "08h às 19h (Seg-Sáb)", sup: "Alex", end: "Av. Min. Edgard Romero, 285 - Madureira, Rio de Janeiro - RJ, 21360-201" },
-            { id: "UN-RJ-031", nome: "MIAMI CENTER", reg: "RJ", setor: "Setor Zona Sul RJ", func: "06h às 23:59h (Seg-Dom)", sup: "Fabiano", end: "Av. Min. Edgard Romero, 285 - Madureira, Rio de Janeiro - RJ, 21360-201" },
-            { id: "UN-RJ-032", nome: "PRIMEIRO DE MARÇO", reg: "RJ", setor: "Setor Centro RJ", func: "07h às 23:59h (Seg-Dom)", sup: "Jorge", end: "R. Primeiro de Março, 149 - Centro, Rio de Janeiro - RJ, 20010-000" },
+            { id: "UN-RJ-031", nome: "MIAMI CENTER", reg: "RJ", setor: "Setor Zona Sul RJ", func: "06h às 24h (Seg-Dom)", sup: "Fabiano", end: "Av. Min. Edgard Romero, 285 - Madureira, Rio de Janeiro - RJ, 21360-201" },
+            { id: "UN-RJ-032", nome: "PRIMEIRO DE MARÇO", reg: "RJ", setor: "Setor Centro RJ", func: "07h às 24h (Seg-Dom)", sup: "Jorge", end: "R. Primeiro de Março, 149 - Centro, Rio de Janeiro - RJ, 20010-000" },
             { id: "UN-RJ-033", nome: "REDE ECONOMIA", reg: "RJ", setor: "Setor Pendotiba Niterói", func: "07h às 22h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Orquídeas, 878 - Itaipuaçu, Maricá - RJ, 24936-050" },
-            { id: "UN-RJ-034", nome: "RESERVA CULTURAL", reg: "RJ", setor: "Setor Centro Niterói", func: "06h às 23:59h (Seg-Dom)", sup: "Carlos Vinicius", end: "Av. Visconde do Rio Branco, 880 - Centro, Niterói - RJ, 24020-007" },
+            { id: "UN-RJ-034", nome: "RESERVA CULTURAL", reg: "RJ", setor: "Setor Centro Niterói", func: "06h às 24h (Seg-Dom)", sup: "Carlos Vinicius", end: "Av. Visconde do Rio Branco, 880 - Centro, Niterói - RJ, 24020-007" },
             { id: "UN-RJ-035", nome: "RINK OFFICES", reg: "RJ", setor: "Setor Centro Niterói", func: "07h às 20h (Seg-Sex) - 07h às 17h (Sáb)", sup: "Carlos Vinicius", end: "Rua Quinze de Novembro, 106 - Centro, Niterói - RJ, 24020-125" },
             { id: "UN-RJ-036", nome: "SALESIANOS", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Santa Rosa, 216 - Santa Rosa, Niterói - RJ, 24220-420" },
             { id: "UN-RJ-037", nome: "STADIUM OFFICES", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sex) - 07h às 13h (Sáb)", sup: "Marcelo Maia", end: "R. Lopes Trovão, 318 - Icaraí, Niterói - RJ, 24220-070" },
@@ -161,6 +165,9 @@
             { id: "UN-RJ-044", nome: "ALVARES AZEVEDO", reg: "RJ", setor: "Setor Icaraí Niterói", func: "08h às 20h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Álvares de Azevedo, 66 - Icaraí, Niterói - RJ, 24220-020" },
             { id: "UN-RJ-045", nome: "ABBR", reg: "RJ", setor: "Setor BOTAFOGO", func: "07h às 20h (Seg-Dom)", sup: "Fabiano", end: "Jardim Botânico, Rio de Janeiro - RJ, 20040-007" },
             { id: "UN-RJ-045-B", nome: "CRYSTAL MALL", reg: "RJ", setor: "Setor Icaraí Niterói", func: "09h às 20h (Seg-Sab)", sup: "Marcelo Maia", end: "R. Ator Paulo Gustavo, 217 - Icaraí, Niterói - RJ, 24230-052" },
+            { id: "UN-RJ-046", nome: "ARARIBOIAR1", reg: "RJ", setor: "Setor Alfar.", func: "24h (Apenas Mensalistas)", sup: "Marcelo Maia", end: "R. Araribóia, 140 - São Francisco, Niterói - RJ, 24360-340", apenasMensal: true },
+            { id: "UN-RJ-047", nome: "FONSECAR1", reg: "RJ", setor: "Setor Bravo", func: "24h (Apenas Mensalistas)", sup: "Carlos Vinicius", end: "Alameda São Boaventura, 258 - Fonseca, Niterói - RJ, 24120-196", apenasMensal: true },
+            { id: "UN-RJ-048", nome: "JOAO PESSOA 2 R1", reg: "RJ", setor: "Setor Alfar.", func: "24h (Apenas Mensalistas)", sup: "Marcelo Maia", end: "R. Pres. João Pessoa, 125 - Icaraí, Niterói - RJ, 24220-330", apenasMensal: true },
             { id: "UN-SP-001", nome: "TELHA NORTE SANTOS", reg: "SP", setor: "Setor Baixada", func: "08h às 20h (Seg-Sáb)", sup: "Lucas", end: "Av. Ana Costa, 156 - Vila Matias, Santos - SP, 11060-000" },
             { id: "UN-SP-002", nome: "TELHA NORTE MORUMBI", reg: "SP", setor: "Setor SP Capital", func: "06h às 23h (Seg-Dom)", sup: "Lucas", end: "Av. Roque Petroni Júnior, 1226 - Jardim das Acacias, São Paulo - SP, 04707-000" }
         ];
@@ -178,24 +185,28 @@
             const tbody = document.getElementById('tabelaCorpo');
             let linhasHTML = '';
             
-            let countRJ = 0, countSP = 0, countPendentes = 0;
+            let countRJ = 0, countSP = 0, countPendentes = 0, countApenasMensal = 0;
 
             unidades.forEach((u, index) => {
                 // Cálculo dos KPIs
                 if (u.reg === 'RJ') countRJ++;
                 if (u.reg === 'SP') countSP++;
                 if (!u.end || u.end.trim() === "") countPendentes++;
+                if (u.apenasMensal) countApenasMensal++;
 
                 // Cor alternada (zebra)
                 const bgClass = index % 2 === 0 ? 'bg-spwhite' : 'bg-gray-50';
+                
+                // Indicador visual de unidade exclusiva para mensalistas
+                const badgeApenasMensal = u.apenasMensal ? `<span class="bg-yellow-100 text-yellow-800 text-[10px] font-bold px-2 py-0.5 rounded ml-2 border border-yellow-300 shadow-sm uppercase">Apenas Mensal</span>` : '';
 
                 linhasHTML += `
                     <tr class="border-b hover:bg-gray-200 transition-colors ${bgClass}">
                         <td class="px-4 py-3 font-medium text-spgray">${u.id} <span class="text-xs bg-spblack text-spwhite px-1 ml-1 rounded">${u.reg}</span></td>
-                        <td class="px-4 py-3 font-bold text-spblack">${u.nome}</td>
+                        <td class="px-4 py-3 font-bold text-spblack flex items-center">${u.nome} ${badgeApenasMensal}</td>
                         <td class="px-4 py-3">${u.setor}</td>
                         <td class="px-4 py-3 font-medium"><span class="bg-gray-200 px-2 py-1 rounded text-xs text-spblack border border-gray-300">👤 ${u.sup}</span></td>
-                        <td class="px-4 py-3 text-xs text-spgray whitespace-normal">${u.func}</td>
+                        <td class="px-4 py-3 text-xs text-spgray whitespace-normal font-semibold">${u.func}</td>
                         <td class="px-4 py-3 text-xs whitespace-normal w-1/3 truncate" title="${u.end}">${formatarEndereco(u.end)}</td>
                     </tr>
                 `;
@@ -208,6 +219,7 @@
             document.getElementById('kpiRJ').innerText = countRJ;
             document.getElementById('kpiSP').innerText = countSP;
             document.getElementById('kpiPendentes').innerText = countPendentes;
+            document.getElementById('kpiApenasMensal').innerText = countApenasMensal;
         }
 
         // Função de filtro dinâmico
