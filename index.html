@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAFETY PARK - Diretório de Unidades</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuração de Cores da Safety Park -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        spblack: '#000000',
+                        spwhite: '#FFFFFF',
+                        spgray: '#808080',
+                        spred: '#FF0000'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilização extra para a barra de rolagem da tabela */
+        .table-container {
+            max-height: 70vh;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #808080; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF0000; 
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-spblack antialiased">
+
+    <!-- Header Corporativo -->
+    <header class="bg-spblack text-spwhite p-5 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="bg-spred text-spwhite font-extrabold text-2xl px-3 py-1 rounded shadow">SP</div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wider uppercase">Safety Park Estacionamentos</h1>
+                <p class="text-spgray text-sm">Diretório Estratégico de Operações</p>
+            </div>
+        </div>
+        
+        <!-- Barra de Pesquisa -->
+        <div class="relative w-full md:w-1/3">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-4 h-4 text-spgray" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input type="text" id="searchInput" class="block w-full p-2.5 pl-10 text-sm text-spblack bg-spwhite border border-spgray rounded-lg focus:ring-spred focus:border-spred" placeholder="Buscar por filial, supervisor, setor ou regional..." onkeyup="filtrarTabela()">
+        </div>
+    </header>
+
+    <!-- Container Principal -->
+    <main class="p-6">
+        
+        <!-- Cartões de Resumo (KPIs rápidos) -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-spwhite p-4 rounded-lg shadow border-l-4 border-spred">
+                <h3 class="text-spgray text-xs font-bold uppercase">Total de Unidades</h3>
+                <p class="text-2xl font-bold text-spblack" id="kpiTotal">0</p>
+            </div>
+            <div class="bg-spwhite p-4 rounded-lg shadow border-l-4 border-spblack">
+                <h3 class="text-spgray text-xs font-bold uppercase">Regional RJ</h3>
+                <p class="text-2xl font-bold text-spblack" id="kpiRJ">0</p>
+            </div>
+            <div class="bg-spwhite p-4 rounded-lg shadow border-l-4 border-spgray">
+                <h3 class="text-spgray text-xs font-bold uppercase">Regional SP</h3>
+                <p class="text-2xl font-bold text-spblack" id="kpiSP">0</p>
+            </div>
+            <div class="bg-spwhite p-4 rounded-lg shadow border-l-4 border-spred">
+                <h3 class="text-spgray text-xs font-bold uppercase">Pendência de Endereço</h3>
+                <p class="text-2xl font-bold text-red-600" id="kpiPendentes">0</p>
+            </div>
+        </div>
+
+        <!-- Tabela de Dados -->
+        <div class="bg-spwhite rounded-lg shadow overflow-hidden table-container overflow-y-auto">
+            <table class="w-full text-sm text-left whitespace-nowrap">
+                <thead class="text-xs text-spwhite uppercase bg-spblack sticky top-0 z-10">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">ID / Regional</th>
+                        <th scope="col" class="px-4 py-3">Nome da Filial</th>
+                        <th scope="col" class="px-4 py-3">Setor</th>
+                        <th scope="col" class="px-4 py-3">Supervisor</th>
+                        <th scope="col" class="px-4 py-3">Funcionamento</th>
+                        <th scope="col" class="px-4 py-3">Endereço</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaCorpo">
+                    <!-- As linhas serão geradas via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Mensagem de "Nenhum resultado encontrado" -->
+        <div id="noResults" class="hidden text-center py-6 text-spgray font-medium">
+            Nenhuma unidade encontrada com os termos pesquisados.
+        </div>
+    </main>
+
+    <!-- Lógica JavaScript para injetar os dados e criar o filtro -->
+    <script>
+        // Dados extraídos do sistema (Safito) - Atualizados com nova roteirização de supervisores
+        const unidades = [
+            { id: "UN-RJ-001", nome: "ACM - RIO", reg: "RJ", setor: "Setor Lapa", func: "05:45h às 22h (Seg-Sex) - 08h às 20h (Sáb/Dom)", sup: "Fabiano", end: "R. da Lapa, 86 - Lapa, RJ, 20021-180" },
+            { id: "UN-RJ-002", nome: "ASA BOTAFOGO", reg: "RJ", setor: "Setor Zona Sul", func: "07h às 22h (Seg-Sáb) - 08h às 20h (Dom)", sup: "Fabiano", end: "R. São Clemente, 155 - Botafogo, Rio de Janeiro - RJ, 22260-003" },
+            { id: "UN-RJ-003", nome: "BARCAS SHOPPING", reg: "RJ", setor: "Setor Niterói", func: "07:30h às 20h (Seg-Sex) - 07:30h às 18h (Sáb)", sup: "Carlos Vinicius", end: "R. Visc. do Uruguai, 231 - Centro, Niterói - RJ, 24030-073" },
+            { id: "UN-RJ-004", nome: "BARRA MALL", reg: "RJ", setor: "Setor Barra", func: "06h às 23:59h (Seg-Dom)", sup: "Alex", end: "Av. das Américas, 7.700 - Barra da Tijuca, Rio de Janeiro - RJ, 22793-081" },
+            { id: "UN-RJ-005", nome: "BEIRA MAR", reg: "RJ", setor: "Setor Icaraí Niterói", func: "08h às 22h (Seg-Sex) - 08h às 21h (Sáb/Dom)", sup: "Marcelo Maia", end: "R. Pres. Backer, 68 - Icaraí, Niterói - RJ, 24220-045" },
+            { id: "UN-RJ-006", nome: "BOKEL", reg: "RJ", setor: "Setor Centro RJ", func: "06h às 23h (Seg-Sex) - 08h às 20h (Sáb/Dom)", sup: "Fabiano", end: "Av. Rio Branco, 245 - Centro, Rio de Janeiro - RJ, 20040-009" },
+            { id: "UN-RJ-007", nome: "CENTER IV", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sex) - 07h às 18h (Sáb)", sup: "Marcelo Maia", end: "R. Lopes Trovão, 122 - Icaraí, Niterói - RJ, 24220-071" },
+            { id: "UN-RJ-008", nome: "CENTRAL PARK", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sex) - 07h às 18h (Sáb)", sup: "Marcelo Maia", end: "R. Otávio Carneiro, 143 - Icaraí, Niterói - RJ, 24230-190" },
+            { id: "UN-RJ-009", nome: "CENTRAL PRIME", reg: "RJ", setor: "Setor Icaraí Niterói", func: "06h às 23:59h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Otávio Carneiro, 143 - Icaraí, Niterói - RJ, 24230-190" },
+            { id: "UN-RJ-010", nome: "CENTRO CLÍNICO ICARAÍ", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 22h (Seg-Sex) - 07h às 20h (Sáb)", sup: "Marcelo Maia", end: "R. Miguel de Frias, 51 - Icaraí, Niterói - RJ, 24220-008" },
+            { id: "UN-RJ-011", nome: "CENTRO COMERCIAL AMERICAS", reg: "RJ", setor: "Setor Barra", func: "07h às 22h (Seg-Sáb)", sup: "Alex", end: "Av. das Américas, 3693 - Barra da Tijuca, Rio de Janeiro - RJ, 22631-003" },
+            { id: "UN-RJ-012", nome: "CEVI", reg: "RJ", setor: "Setor Centro RJ", func: "06h às 22h (Seg-Sex) - 07h às 17h (Sáb)", sup: "Alessandro", end: "R. Gavião Peixoto, 182 - Icaraí, Niterói - RJ, 24230-101" },
+            { id: "UN-RJ-014", nome: "CONCEIÇÃO", reg: "RJ", setor: "Setor Centro Niterói", func: "08h às 20h (Seg-Sex) - 08h às 16h (Sáb)", sup: "Carlos Vinicius", end: "R. da Conceição, 171 - Centro, Niterói - RJ, 24020-086" },
+            { id: "UN-RJ-015", nome: "COPACABANA MEDICAL CENTER", reg: "RJ", setor: "Setor Zona Sul", func: "06h às 23:59h (Seg-Dom)", sup: "Fabiano", end: "Rua Siqueira Campos, 93 - Copacabana, Rio de Janeiro - RJ, 22031-071" },
+            { id: "UN-RJ-016", nome: "CS FATIMA", reg: "RJ", setor: "Setor Nova Iguaçu RJ", func: "06h às 23:59h (Seg-Dom)", sup: "Alex", end: "Av. Gov. Roberto Silveira, 470 - Centro, Nova Iguaçu - RJ, 26210-220" },
+            { id: "UN-RJ-017", nome: "ELETROBRAS", reg: "RJ", setor: "Setor Centro RJ", func: "06h às 22h (Seg-Sex) - 07h às 13h (Sáb)", sup: "Fabiano", end: "" },
+            { id: "UN-RJ-018", nome: "GLOBAL FREGUESIA", reg: "RJ", setor: "Setor Jacarepaguá", func: "07h às 22h (Seg-Sex) - 07h às 18h (Sáb)", sup: "Alex", end: "Estr. dos Três Rios, 1173 - Freguesia (Jacarepaguá), Rio de Janeiro - RJ, 22745-004" },
+            { id: "UN-RJ-019", nome: "FUTURA SHOPPING", reg: "RJ", setor: "Setor Pendotiba Niterói", func: "07h às 22h (Seg-Sex) - 07h às 22h (Sáb)", sup: "Carlos Vinicius", end: "R. Visc. do Uruguai, 231 - Centro, Niterói - RJ, 24030-073" },
+            { id: "UN-RJ-020", nome: "GLOBAL OFFICES", reg: "RJ", setor: "Setor Centro de Niterói", func: "07h às 20h (Seg-Sex) - 07h às 17h (Sáb)", sup: "Carlos Vinicius", end: "R. Gen. Andrade Neves, 38 - Centro, Niterói - RJ, 24210-000" },
+            { id: "UN-RJ-021", nome: "HILÁRIO DE GOUVEIA", reg: "RJ", setor: "Setor Zona Sul", func: "07h às 22h (Seg-Sex) - 08h às 22h (Sáb) - 08h às 20h (Dom)", sup: "Fabiano", end: "R. Primeiro de Março, 149 - Centro, Rio de Janeiro - RJ, 20010-000" },
+            { id: "UN-RJ-022", nome: "HOSPITAL ITAIPU", reg: "RJ", setor: "Setor Pendotiba Niterói", func: "06h às 23:59h (Seg-Dom)", sup: "Marcelo Maia", end: "Estr. Francisco da Cruz Nunes, 5599 - Itaipu, Niterói - RJ, 24310-340" },
+            { id: "UN-RJ-023", nome: "HUMAITÁ", reg: "RJ", setor: "Setor Zona Sul", func: "06h às 23:59h (Seg-Dom)", sup: "Fabiano", end: "Rua Humaitá, 72 - Humaitá, Rio de Janeiro - RJ, 22261-001" },
+            { id: "UN-RJ-024", nome: "IB SANTA ROSA", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sáb) - 07h às 13h (Dom)", sup: "Marcelo Maia", end: "R. Santa Rosa, 25 - Santa Rosa, Niterói - RJ, 24240-225" },
+            { id: "UN-RJ-025", nome: "IGREJA SÃO JOÃO BATISTA", reg: "RJ", setor: "Setor Botafogo RJ", func: "06h às 23:59h (Seg-Dom)", sup: "Fabiano", end: "R. Voluntários da Pátria, 287 - Botafogo, Rio de Janeiro - RJ, 22270-003" },
+            { id: "UN-RJ-026", nome: "IPANEMA", reg: "RJ", setor: "Setor Zona Sul", func: "07h às 22h (Seg-Sáb) - 07h às 20h (Dom)", sup: "Fabiano", end: "218 - R. Visc. de Pirajá, 152 - Ipanema, Rio de Janeiro - RJ, 22410-000" },
+            { id: "UN-RJ-027", nome: "ITAUNA SHOPPING", reg: "RJ", setor: "Setor Barra", func: "06h às 23:59h (Seg-Dom)", sup: "Alex", end: "Av. das Américas, 11391 - Barra da Tijuca, Rio de Janeiro - RJ, 22793-082" },
+            { id: "UN-RJ-028", nome: "JOAO PESSOA", reg: "RJ", setor: "Setor Icaraí Niterói", func: "06h às 23:59h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Pres. João Pessoa, 216 - Icaraí, Niterói - RJ, 24220-331" },
+            { id: "UN-RJ-029", nome: "LAGOA AVENTURAS", reg: "RJ", setor: "Setor Zona Sul", func: "08h às 17h (Terça-Dom)", sup: "Alex", end: "Av. Epitácio Pessoa, 3 - Lagoa, Rio de Janeiro - RJ, 22471-002" },
+            { id: "UN-RJ-030", nome: "MADUREIRA", reg: "RJ", setor: "Setor Subúrbio", func: "08h às 19h (Seg-Sáb)", sup: "Alex", end: "Av. Min. Edgard Romero, 285 - Madureira, Rio de Janeiro - RJ, 21360-201" },
+            { id: "UN-RJ-031", nome: "MIAMI CENTER", reg: "RJ", setor: "Setor Zona Sul RJ", func: "06h às 23:59h (Seg-Dom)", sup: "Fabiano", end: "Av. Min. Edgard Romero, 285 - Madureira, Rio de Janeiro - RJ, 21360-201" },
+            { id: "UN-RJ-032", nome: "PRIMEIRO DE MARÇO", reg: "RJ", setor: "Setor Centro RJ", func: "07h às 23:59h (Seg-Dom)", sup: "Jorge", end: "R. Primeiro de Março, 149 - Centro, Rio de Janeiro - RJ, 20010-000" },
+            { id: "UN-RJ-033", nome: "REDE ECONOMIA", reg: "RJ", setor: "Setor Pendotiba Niterói", func: "07h às 22h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Orquídeas, 878 - Itaipuaçu, Maricá - RJ, 24936-050" },
+            { id: "UN-RJ-034", nome: "RESERVA CULTURAL", reg: "RJ", setor: "Setor Centro Niterói", func: "06h às 23:59h (Seg-Dom)", sup: "Carlos Vinicius", end: "Av. Visconde do Rio Branco, 880 - Centro, Niterói - RJ, 24020-007" },
+            { id: "UN-RJ-035", nome: "RINK OFFICES", reg: "RJ", setor: "Setor Centro Niterói", func: "07h às 20h (Seg-Sex) - 07h às 17h (Sáb)", sup: "Carlos Vinicius", end: "Rua Quinze de Novembro, 106 - Centro, Niterói - RJ, 24020-125" },
+            { id: "UN-RJ-036", nome: "SALESIANOS", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Santa Rosa, 216 - Santa Rosa, Niterói - RJ, 24220-420" },
+            { id: "UN-RJ-037", nome: "STADIUM OFFICES", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sex) - 07h às 13h (Sáb)", sup: "Marcelo Maia", end: "R. Lopes Trovão, 318 - Icaraí, Niterói - RJ, 24220-070" },
+            { id: "UN-RJ-038", nome: "SÃO PEDRO 176", reg: "RJ", setor: "Setor Centro Niterói", func: "07h às 20h (Seg-Sex) - 07h às 16h (Sáb)", sup: "Carlos Vinicius", end: "R. São Pedro, 178 - Centro, Niterói - RJ, 24020-058" },
+            { id: "UN-RJ-039", nome: "TOP COMMERCE", reg: "RJ", setor: "Setor Nova Iguaçu", func: "07h às 22h (Seg-Sex) - 07h às 20h (Sáb/Dom)", sup: "Alex", end: "Av. Gov. Roberto Silveira, 470 - Centro, Nova Iguaçu - RJ, 26210-220" },
+            { id: "UN-RJ-040", nome: "USU BOTAFOGO", reg: "RJ", setor: "Setor Zona Sul", func: "08h às 18h (Seg-Sex)", sup: "Fabiano", end: "" },
+            { id: "UN-RJ-041", nome: "MEN DE SÁ", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sáb) - 10h às 21h (Dom)", sup: "Marcelo Maia", end: "R. Primeiro de Março, 149 - Centro, Rio de Janeiro - RJ, 20010-000" },
+            { id: "UN-RJ-042", nome: "BVEP NIGRI PLAZA", reg: "RJ", setor: "Setor Centro RJ", func: "08h às 20h (Seg-Sex)", sup: "Fabiano", end: "R. do Passeio, 78 - Centro, Rio de Janeiro - RJ, 20021-290" },
+            { id: "UN-RJ-043", nome: "CHICAGO", reg: "RJ", setor: "Setor Icaraí Niterói", func: "07h às 20h (Seg-Sáb)", sup: "Marcelo Maia", end: "Rua Dr. Tavares de Macedo, 95 - Icaraí, Niterói - RJ, 24220-215" },
+            { id: "UN-RJ-044", nome: "ALVARES AZEVEDO", reg: "RJ", setor: "Setor Icaraí Niterói", func: "08h às 20h (Seg-Dom)", sup: "Marcelo Maia", end: "R. Álvares de Azevedo, 66 - Icaraí, Niterói - RJ, 24220-020" },
+            { id: "UN-RJ-045", nome: "ABBR", reg: "RJ", setor: "Setor BOTAFOGO", func: "07h às 20h (Seg-Dom)", sup: "Fabiano", end: "Jardim Botânico, Rio de Janeiro - RJ, 20040-007" },
+            { id: "UN-RJ-045-B", nome: "CRYSTAL MALL", reg: "RJ", setor: "Setor Icaraí Niterói", func: "09h às 20h (Seg-Sab)", sup: "Marcelo Maia", end: "R. Ator Paulo Gustavo, 217 - Icaraí, Niterói - RJ, 24230-052" },
+            { id: "UN-SP-001", nome: "TELHA NORTE SANTOS", reg: "SP", setor: "Setor Baixada", func: "08h às 20h (Seg-Sáb)", sup: "Lucas", end: "Av. Ana Costa, 156 - Vila Matias, Santos - SP, 11060-000" },
+            { id: "UN-SP-002", nome: "TELHA NORTE MORUMBI", reg: "SP", setor: "Setor SP Capital", func: "06h às 23h (Seg-Dom)", sup: "Lucas", end: "Av. Roque Petroni Júnior, 1226 - Jardim das Acacias, São Paulo - SP, 04707-000" }
+        ];
+
+        // Função para formatar o status de endereço
+        function formatarEndereco(endereco) {
+            if (!endereco || endereco.trim() === "") {
+                return `<span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-400">Pendente de Atualização</span>`;
+            }
+            return endereco;
+        }
+
+        // Função para popular a tabela e calcular KPIs
+        function carregarDados() {
+            const tbody = document.getElementById('tabelaCorpo');
+            let linhasHTML = '';
+            
+            let countRJ = 0, countSP = 0, countPendentes = 0;
+
+            unidades.forEach((u, index) => {
+                // Cálculo dos KPIs
+                if (u.reg === 'RJ') countRJ++;
+                if (u.reg === 'SP') countSP++;
+                if (!u.end || u.end.trim() === "") countPendentes++;
+
+                // Cor alternada (zebra)
+                const bgClass = index % 2 === 0 ? 'bg-spwhite' : 'bg-gray-50';
+
+                linhasHTML += `
+                    <tr class="border-b hover:bg-gray-200 transition-colors ${bgClass}">
+                        <td class="px-4 py-3 font-medium text-spgray">${u.id} <span class="text-xs bg-spblack text-spwhite px-1 ml-1 rounded">${u.reg}</span></td>
+                        <td class="px-4 py-3 font-bold text-spblack">${u.nome}</td>
+                        <td class="px-4 py-3">${u.setor}</td>
+                        <td class="px-4 py-3 font-medium"><span class="bg-gray-200 px-2 py-1 rounded text-xs text-spblack border border-gray-300">👤 ${u.sup}</span></td>
+                        <td class="px-4 py-3 text-xs text-spgray whitespace-normal">${u.func}</td>
+                        <td class="px-4 py-3 text-xs whitespace-normal w-1/3 truncate" title="${u.end}">${formatarEndereco(u.end)}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = linhasHTML;
+
+            // Atualiza os painéis numéricos superiores
+            document.getElementById('kpiTotal').innerText = unidades.length;
+            document.getElementById('kpiRJ').innerText = countRJ;
+            document.getElementById('kpiSP').innerText = countSP;
+            document.getElementById('kpiPendentes').innerText = countPendentes;
+        }
+
+        // Função de filtro dinâmico
+        function filtrarTabela() {
+            const input = document.getElementById('searchInput').value.toUpperCase();
+            const tabelaCorpo = document.getElementById('tabelaCorpo');
+            const tr = tabelaCorpo.getElementsByTagName('tr');
+            let encontrouAlgo = false;
+
+            for (let i = 0; i < tr.length; i++) {
+                // Junta o texto de todas as colunas para facilitar a busca
+                let textoLinha = tr[i].innerText || tr[i].textContent;
+                
+                if (textoLinha.toUpperCase().indexOf(input) > -1) {
+                    tr[i].style.display = "";
+                    encontrouAlgo = true;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+
+            // Exibir mensagem se nada for encontrado
+            const msgNoResults = document.getElementById('noResults');
+            if (encontrouAlgo) {
+                msgNoResults.classList.add('hidden');
+            } else {
+                msgNoResults.classList.remove('hidden');
+            }
+        }
+
+        // Inicializa ao carregar a página
+        window.onload = carregarDados;
+    </script>
+</body>
+</html>
